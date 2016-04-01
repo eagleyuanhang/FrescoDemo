@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 ext.appVersionCode = 1
 ext.appVersionName = "1.0.0"
-ext.appReleaseDir = "/Users/Michael/Desktop/Android/FrescoDemo/app/release"
+ext.appReleaseDir = "/Users/Shared/Jenkins/Home/jobs/FrescoDemo/workspace"
 
 def loadProperties() {
     def proFile = file("../local.properties")
