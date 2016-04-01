@@ -1,0 +1,131 @@
+apply plugin: 'com.android.application'
+
+ext.appVersionCode = 1
+ext.appVersionName = "1.0.0"
+ext.appReleaseDir = "/Users/Michael/Desktop/Android/FrescoDemo/app/release"
+
+def loadProperties() {
+    def proFile = file("../local.properties")
+    Properties p = new Properties()
+    proFile.withInputStream { stream->
+        p.load(stream)
+    }
+    appReleaseDir = p.appReleaseDir
+    appVersionCode = Integer.valueOf(p.appVersionCode)
+    appVersionName = p.appVersionName
+}
+
+loadProperties()
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
+    defaultConfig {
+        applicationId "com.benlai.frescodemo"
+        minSdkVersion 21
+        targetSdkVersion 23
+        versionCode appVersionCode
+        versionName appVersionName
+    }
+
+    signingConfigs {//签名信息 可以自定义很多
+        releaseConfig {
+            storeFile file("guofang.jks")
+            storePassword "guofang"
+            keyAlias "guofang"
+            keyPassword "guofang"
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            signingConfig signingConfigs.releaseConfig
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+
+    }
+
+    productFlavors {
+        //  默认
+        Witspring {}
+        // google play
+        谷歌商店 {}
+        // 百度应用市场
+        百度应用市场 {}
+        // 360应用市场
+        _360应用市场 {}
+        // 应用宝
+        应用宝 {}
+        // 豌豆荚
+        豌豆荚 {}
+        // 小米商店
+        小米商店 {}
+        // 安卓市场
+        安卓市场 {}
+        // 91助手
+        _91助手 {}
+        // 安智市场
+        安智市场 {}
+        // 应用汇
+        应用汇 {}
+        // 机锋市场
+        机锋市场 {}
+        // 魅族商店
+        魅族商店 {}
+        productFlavors.all {
+            flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+        }
+
+    }
+
+    //修改生成的apk名字
+    applicationVariants.all{ variant->
+        variant.outputs.each { output->
+            def oldFile = output.outputFile
+            def newName = '';
+            if(variant.buildType.name.equals('release')){
+                // APK输出文件名规则：aiyou-版本名-市场-release.apk
+                def releaseApkName = 'aiyou-' + appVersionName + '-' + variant.productFlavors[0].name + '-release.apk'
+                // appReleaseDir对应local.properties里面定义的路径，再加上日期（格式：201503011230）文件夹
+                output.outputFile = new File(appReleaseDir + '/' + getDate(), releaseApkName)
+            }
+            if(variant.buildType.name.equals('beta')){
+            }
+            if(variant.buildType.name.equals('debug')){
+
+            }
+        }
+    }
+
+}
+
+//获取时间戳
+def getDate() {
+    def date = new Date()
+    def formattedDate = date.format('yyyyMMddHHmm')
+    return formattedDate
+}
+
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.2.1'
+    compile 'com.facebook.fresco:fresco:0.9.0+'
+    compile 'com.jakewharton:butterknife:7.0.1'
+}
+
+//apt {
+//    arguments {
+//        androidManifestFile variant.outputs[0].processResources.manifestFile
+//        resourcePackageName 'com.benlai.frescodemo'
+//    }
+//}
