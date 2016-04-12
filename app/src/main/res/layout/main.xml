@@ -44,6 +44,7 @@
             android:layout_height="200dp"
             android:layout_weight="1"
             android:scaleType="centerCrop"
+            fresco:progressBarImage="@drawable/loading_primary"
             fresco:failureImage="@mipmap/jiazaishibai"
             fresco:placeholderImage="@mipmap/loading" />
     </LinearLayout>

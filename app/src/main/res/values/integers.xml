@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Animation Durations -->
+    <integer name="sliding_duration">300</integer>
+    <integer name="loading_primary_duration">30</integer>
+</resources>
